@@ -1,4 +1,6 @@
 # checks for re-assginment within the same scope
+# 09 Dec 2016
+# Edmund Chong
 
 import os;
 import re;

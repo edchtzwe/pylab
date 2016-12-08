@@ -1,5 +1,6 @@
 # declaration finder for PERL, find the occurences of a my declaration of a variable
-# 08 Dec 2016; Edmund Chong
+# 09 Dec 2016
+# Edmund Chong
 import os;
 import re;
 
