@@ -14,9 +14,9 @@ for index in range(len(pathlist)):
     filePath = folderPath+pathlist[index];
     fileHandler = open(filePath, "r");
     fileContents = fileHandler.read()
-    regex = re.search(r'(main).*?', fileContents);
+    regex = re.search(r'(main)\s*\(', fileContents);
     # withStr.append(filePath) if regex != None else withoutStr.append(filePath);
-    if regex == None:
+    if not regex:
         print filePath;
     fileHandler.close();
 # print "\n".join(withStr);
