@@ -3,9 +3,12 @@
 import os;
 import re;
 
+progName = os.path.basename(__file__);
+print "progName = " + progName;
 curDir = os.path.dirname(__file__);
 relPath = "/folderPath.txt";
 curDir = curDir.replace("\\", "/");
+# folder path holds the fullpath to the folder to be search eg. c://tier1/tier2/
 folderPath = open(curDir+relPath, "r");
 print "Filename:";
 fileName = raw_input();
