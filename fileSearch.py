@@ -1,6 +1,8 @@
 import os;
 import re;
 
+progName = os.path.basename(__file__);
+print "progName = " + progName;
 curDir = os.path.dirname(__file__);
 relPath = "/folderPath.txt";
 curDir = curDir.replace("\\", "/");
