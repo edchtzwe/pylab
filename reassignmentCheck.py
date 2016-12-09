@@ -16,21 +16,25 @@ print "Filename:";
 fileName = raw_input();
 folderPath = folderPath.read()
 filePath = folderPath + fileName;
-
+originalFilePath = 0;
+resetLineNum = 1;
+startLine = 0;
+endLine = 0;
 # main loop. Refactor to main() if free.
 while (True):
-    print "After line num:"
-    startLine = 0;
-    endLine = 0;
-    try:
-        startLine = int(raw_input());
-    except:
-        startLine = 1;
-    print "End line num (0 to skip):";
-    try:
-        endLine = int(raw_input());
-    except:
+    if (resetLineNum):
+        print "After line num:"
+        startLine = 0;
         endLine = 0;
+        try:
+            startLine = int(raw_input());
+        except:
+            startLine = 1;
+        print "End line num (0 to skip):";
+        try:
+            endLine = int(raw_input());
+        except:
+            endLine = 0;
     print "Varname:";
     varName = raw_input();
     print "Searching " + varName + " in " + filePath;
@@ -42,32 +46,44 @@ while (True):
     # we do not want any declarations, for PERL, skip any lines with a my declaration keyword
     # add our if you want, but globals are pretty nasty so we're not using those
     regex2 = re.compile('my\s+'); # at least a space between my or else it's malformed
-    with open(filePath, "r") as fileHandler:
-        for line_i, line in enumerate(fileHandler, 1):
-            if (regex2.search(line)):
-                continue;
-            else :
-                if (regex.search(line)) and line_i >= int(startLine):
-                    if endLine < 1:
+    try:
+        fileHandler = open(filePath, "r");
+    except:
+        print "Failed to open file. Using last provided file: " + originalFilePath;
+        filePath = originalFilePath;
+        fileHandler = open(filePath, "r");
+    for line_i, line in enumerate(fileHandler, 1):
+        if (regex2.search(line)):
+            continue;
+        else :
+            if (regex.search(line)) and line_i >= int(startLine):
+                if endLine < 1:
+                    lineNum.append(str(line_i));
+                    lineText.append(line);
+                else:
+                    if line_i > endLine:
+                        continue;
+                    else:
                         lineNum.append(str(line_i));
                         lineText.append(line);
-                    else:
-                        if line_i > endLine:
-                            continue;
-                        else:
-                            lineNum.append(str(line_i));
-                            lineText.append(line);
-        fileHandler.close();
+    fileHandler.close();
     print "line num\tline text";
     for index in range(len(lineNum)):            
         print lineNum[index] + " | " + lineText[index].strip();
     
     print "New file?(1 or 0):";
     newFile = 0;
+    # if we got here, everything has been working perfectly
+    originalFilePath = filePath;
     try:
         newFile = int(raw_input());
     except:
         newFile = 0;
+    print "Reset scope?(1 or 0):";
+    try:
+        resetLineNum = int(raw_input());
+    except:
+        resetLineNum = 0;
     if newFile > 0:
         print "Filename:";
         fileName = raw_input();
