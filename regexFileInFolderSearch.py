@@ -1,6 +1,6 @@
 # regex file in folder search
 # 09 Dec 2016
-# Edmund Chong
+# Edmund Chong / 7440820@gmail.com
 
 import os;
 import re;

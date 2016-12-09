@@ -1,3 +1,7 @@
+# declaration finder for PERL, find the occurences of a my declaration of a variable
+# 09 Dec 2016
+# Edmund Chong / 7440820@gmail.com
+
 import os;
 import re;
 
