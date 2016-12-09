@@ -17,8 +17,6 @@ pattern = raw_input();
 regex = re.compile(pattern);
 print "Searching :" + folderPath + " for " + pattern;
 pathlist = os.listdir(folderPath);
-lineNum = [];
-lineText = [];
 
 # run through every file in the folder
 for index in range(len(pathlist)):    
