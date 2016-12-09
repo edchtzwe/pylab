@@ -1,6 +1,6 @@
 # declaration finder for PERL, find the occurences of a my declaration of a variable
 # 09 Dec 2016
-# Edmund Chong
+# Edmund Chong / 7440820@gmail.com
 import os;
 import re;
 
@@ -43,7 +43,7 @@ while (True):
     # my $var;
     regex3 = re.compile('my.*(\$|@|%)'+varName+'\)*;');
     # LHS check
-    regex4 = re.compile('my.*(\$|@|%)'+varName+'\)*');
+    regex4 = re.compile('my.*(\$|@|%)'+varName+'[,\)\s*]');
     with open(filePath, "r") as fileHandler:
         for line_i, line in enumerate(fileHandler, 1):
             assgn = line.split('=');
