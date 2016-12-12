@@ -3,12 +3,12 @@
 # Edmund Chong / 7440820@gmail.com
 import os;
 import re;
-from lib import folderPath;
+from lib import App;
 from lib import lineNumAndText;
 
 progName = os.path.basename(__file__);
 print "progName = " + progName;
-folderPath = folderPath.getFolderPath();
+folderPath = App.getFolderPath();
 
 print "Filename:";
 fileName = raw_input();
