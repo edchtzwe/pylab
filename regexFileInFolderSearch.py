@@ -4,14 +4,18 @@
 
 import os;
 import re;
+from lib import folderPath;
 
 progName = os.path.basename(__file__);
 print "progName = " + progName;
-curDir = os.path.dirname(__file__);
-relPath = "/folderPath.txt";
-curDir = curDir.replace("\\", "/");
-folderPath = open(curDir+relPath, "r");
-folderPath = folderPath.read();
+folderPath = folderPath.getFolderPath();
+
+print "Quit at first match in file? (0 or 1):"
+try:
+    flag1 = int(raw_input());
+except:
+    flag1 = 0;
+    
 print "Regex string: ";
 pattern = raw_input();
 regex = re.compile(pattern);
@@ -22,8 +26,13 @@ pathlist = os.listdir(folderPath);
 for index in range(len(pathlist)):    
     # get the fileName and append to the folderPath, forming a filePath
     filePath = folderPath+pathlist[index];
-    with open(filePath, "r") as fileHandler:
+    try:
+        fileHandler = open(filePath, "r");
         for line_i, line in enumerate(fileHandler, 1):
             if (regex.search(line)):
                 print filePath + " => " + str(line_i) + " | " + line;
+                if (flag1):
+                    break;
         fileHandler.close();
+    except:
+        continue;
