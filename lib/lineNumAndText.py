@@ -1,6 +1,8 @@
 import os;
 import re;
 
+getNextRegex = re.compile('\S*\s*;');
+
 def genericLineNumAndText(fileHandler, regexList):
     lineNum = [];
     lineText = [];
@@ -8,6 +10,61 @@ def genericLineNumAndText(fileHandler, regexList):
         if (regexCheck(regexList, line)):
             lineNum.append(str(line_i));
             lineText.append(line);
+    return {'lineNum':lineNum, 'lineText':lineText};
+    
+def scopedLineNumAndText(fileHandler, regexList, scope):
+    lineNum = [];
+    lineText = [];
+    startLine = scope['startLine'];
+    endLine = scope['endLine'];
+    getNext = 0;
+    for line_i, line in enumerate(fileHandler, 1):
+        if (getNext):
+            lineNum.append('   ');
+            lineText.append(line);
+        if (getNextRegex.search(line)):
+            getNext = 0;
+        if (startLine and line_i < startLine):
+            continue;
+        if (endLine and line_i > endLine):
+            break;
+        if (regexCheck(regexList, line)):
+            lineNum.append(str(line_i));
+            lineText.append(line);
+            if (not getNextRegex.search(line)):
+                getNext = 1;
+    return {'lineNum':lineNum, 'lineText':lineText};
+    
+# only checks LHS if variable is found in an assignment statement
+def scopedAssignCheckLineNumAndText(fileHandler, regexList, scope):
+    lineNum = [];
+    lineText = [];
+    startLine = scope['startLine'];
+    endLine = scope['endLine'];
+    getNext = 0;
+    
+    for line_i, line in enumerate(fileHandler, 1):
+        originalLine = line;
+        if (getNext):
+            lineNum.append('   ');
+            lineText.append(line);
+        if (getNextRegex.search(originalLine)):
+            getNext = 0;
+        if (startLine and line_i < startLine):
+            continue;
+        if (endLine and line_i > endLine):
+            break;
+        assgn = line.split('=');
+        
+        # it's an assign, check LHS only
+        if len(assgn) > 1:
+            line = assgn[0];
+        
+        if (regexCheck(regexList, line)):
+            lineNum.append(str(line_i));
+            lineText.append(originalLine);
+            if (not getNextRegex.search(originalLine)):
+                getNext = 1;
     return {'lineNum':lineNum, 'lineText':lineText};
 
 def regexCheck(regexList, line):
@@ -30,3 +87,5 @@ def getScope():
     except:
         endLine = 0;
     return {'startLine':startLine, 'endLine':endLine};
+    
+    
