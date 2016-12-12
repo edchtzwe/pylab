@@ -3,17 +3,14 @@
 # Edmund Chong / 7440820@gmail.com
 import os;
 import re;
+from lib import folderPath;
+from lib import lineNumAndText;
 
 progName = os.path.basename(__file__);
 print "progName = " + progName;
-curDir = os.path.dirname(__file__);
-relPath = "/folderPath.txt";
-curDir = curDir.replace("\\", "/");
-# folder path holds the fullpath to the folder to be search eg. c://tier1/tier2/
-folderPath = open(curDir+relPath, "r");
+folderPath = folderPath.getFolderPath();
 print "Filename:";
 fileName = raw_input();
-folderPath = folderPath.read()
 filePath = folderPath + fileName;
 originalFilePath = 0;
 resetLineNum = 1;
@@ -21,18 +18,9 @@ startLine = 0;
 endLine = 0;
 while (True):
     if (resetLineNum):
-        print "After line num:"
-        startLine = 0;
-        endLine = 0;
-        try:
-            startLine = int(raw_input());
-        except:
-            startLine = 1;
-        print "End line num (0 to skip):";
-        try:
-            endLine = int(raw_input());
-        except:
-            endLine = 0;
+        scope = lineNumAndText.getScope();
+        startLine = scope['startLine'];
+        endLine = scope['endLine'];
     print "Varname:";
     varName = raw_input();
     print "Searching " + varName + " in " + filePath;
