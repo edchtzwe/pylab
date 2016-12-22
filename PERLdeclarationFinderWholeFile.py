@@ -3,29 +3,30 @@
 # Edmund Chong / 7440820@gmail.com
 import os;
 import re;
+from lib import App;
+from lib import lineNumAndText;
 
 progName = os.path.basename(__file__);
 print "progName = " + progName;
-curDir = os.path.dirname(__file__);
-relPath = "/folderPath.txt";
-curDir = curDir.replace("\\", "/");
-# folder path holds the fullpath to the folder to be search eg. c://tier1/tier2/
-folderPath = open(curDir+relPath, "r");
-print "Filename:";
-fileName = raw_input();
-folderPath = folderPath.read()
-filePath = folderPath + fileName;
+initInstances = App.genericInitOperation("variable");
+filePath = initInstances['filePath'];
 originalFilePath = 0;
+resetModeName = 0;
+startLine = 0;
+endLine = 0;
+varName = initInstances['modeName'];
+
 while (True):
-    print "Varname:";
-    varName = raw_input();
-    print "Searching " + varName + " in " + filePath;
+    if (resetModeName):
+        varName = App.getModeName('Variable');
+        resetModeName = 0;
     # term can look like
     # my $term =
     # my ($term, ...)
     # my ($other, $term, ....) or my ( $other, $term, ....)
     lineNum = [];
     lineText = [];
+
     regex = re.compile('my.*(\$|@|%)'+varName+'[,\s\)].*=');
     # if in a foreach my $varName 
     regex2 = re.compile('foreach\s*my\s\$'+varName+'.*');
@@ -33,40 +34,21 @@ while (True):
     regex3 = re.compile('my.*(\$|@|%)'+varName+'\)*;');
     # LHS check
     regex4 = re.compile('my.*(\$|@|%)'+varName+'[,\)\s*]');
+    regexList = [regex, regex2, regex3, regex4];
     try:
         fileHandler = open(filePath, "r");
     except:
         print "Failed to open file. Using last provided file: " + originalFilePath;
         filePath = originalFilePath;
         fileHandler = open(filePath, "r");
-    for line_i, line in enumerate(fileHandler, 1):
-        assgn = line.split('=');
-        assgnChk = 0;
-        # it's an assign, check LHS only
-        if len(assgn) > 1:
-            line = assgn[0];
-            assgnChk = regex4.search(line);
-        if (regex.search(line) or regex2.search(line) or regex3.search(line) or assgnChk):
-            if len(assgn) > 1:
-                lineNum.append(str(line_i));
-                lineText.append(assgn[0] + " = " + assgn[1]);
-            else:
-                lineNum.append(str(line_i));
-                lineText.append(line);
+
+    result = lineNumAndText.scopedAssignCheckLineNumAndText(fileHandler, regexList, initInstances['scope']);
     fileHandler.close();
-    print "line num\tline text";
-    for index in range(len(lineNum)):            
-        print lineNum[index] + " | " + lineText[index].strip();
     
-    print "New file?(1 or 0):";
-    newFile = 0;
-    # if we got here, everything has been working perfectly
-    originalFilePath = filePath;
-    try:
-        newFile = int(raw_input());
-    except:
-        newFile = 0;
-    if newFile > 0:
-        print "Filename:";
-        fileName = raw_input();
-        filePath = folderPath + fileName;
+    App.genericPrintResults(result);
+    
+    reinitSequence = App.reinitSequenceNoScope(initInstances);
+    initInstances['filePath'] = reinitSequence['filePath'];
+    resetModeName = reinitSequence['resetModeName'];
+    filePath = reinitSequence['filePath'];
+    
