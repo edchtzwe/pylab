@@ -66,6 +66,18 @@ def scopedAssignCheckLineNumAndText(fileHandler, regexList, scope):
             if (not getNextRegex.search(originalLine)):
                 getNext = 1;
     return {'lineNum':lineNum, 'lineText':lineText};
+    
+def reassignmentCheck(fileHandler, regex, regex2):
+    lineNum = [];
+    lineText = [];
+    for line_i, line in enumerate(fileHandler, 1):
+        if (regex2.search(line)):
+            continue;
+        else :
+            if (regex.search(line)):
+                lineNum.append(str(line_i));
+                lineText.append(line);
+    return {'lineNum':lineNum, 'lineText':lineText};
 
 def regexCheck(regexList, line):
     for index in range(len(regexList)):
@@ -87,5 +99,4 @@ def getScope():
     except:
         endLine = 0;
     return {'startLine':startLine, 'endLine':endLine};
-    
     
