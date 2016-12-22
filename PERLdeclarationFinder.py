@@ -20,8 +20,8 @@ varName = initInstances['modeName'];
 while (True):
     if (resetLineNum):
         scope = lineNumAndText.getScope();
-        startLine = scope['startLine'];
-        endLine = scope['endLine'];
+        initInstances['scope']['startLine'] = scope['startLine'];
+        initInstances['scope']['endLine'] = scope['endLine'];
         resetLineNum = 0;
     if (resetModeName):
         varName = App.getModeName('Variable');
@@ -32,7 +32,7 @@ while (True):
     # my ($other, $term, ....) or my ( $other, $term, ....)
     lineNum = [];
     lineText = [];
-    
+
     regex = re.compile('my.*(\$|@|%)'+varName+'[,\s\)].*=');
     # if in a foreach my $varName 
     regex2 = re.compile('foreach\s*my\s\$'+varName+'.*');
@@ -47,6 +47,7 @@ while (True):
         print "Failed to open file. Using last provided file: " + originalFilePath;
         filePath = originalFilePath;
         fileHandler = open(filePath, "r");
+
     result = lineNumAndText.scopedAssignCheckLineNumAndText(fileHandler, regexList, initInstances['scope']);
     fileHandler.close();
     
