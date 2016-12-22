@@ -32,11 +32,11 @@ def genericInitOperation(mode):
     print "Filename:";
     fileName = raw_input();
     filePath = folderPath + fileName;
-    
+    scope = {'startLine':0, 'endLine':0}
     modeName = getModeName(mode);
     print "Searching " + modeName + " in " + filePath;
     
-    return {'folderPath':folderPath, 'filePath':filePath, 'modeName':modeName, 'mode':mode};
+    return {'folderPath':folderPath, 'filePath':filePath, 'modeName':modeName, 'mode':mode, 'scope':scope};
     
 def scopedInitOperation(mode):
     folderPath = getFolderPath();
@@ -87,3 +87,29 @@ def genericReinitSequence(initInstances):
         filePath = folderPath + fileName;
         
     return {'resetLineNum':resetLineNum, 'filePath':filePath, 'resetModeName':resetModeName};
+    
+def reinitSequenceNoScope(initInstances):
+    print "New file?(1 or 0):";
+    newFile = 0;
+    folderPath = initInstances['folderPath'];
+    filePath = initInstances['filePath'];
+    resetLineNum = 0;
+    resetModeName = 0;
+    
+    try:
+        newFile = int(raw_input());
+    except:
+        newFile = 0;
+
+    print "Reset " + initInstances['mode'] + "? (1 or 0):";
+    try:
+        resetModeName = int(raw_input());
+    except:
+        resetModeName = 0;
+        
+    if newFile > 0:
+        print "Filename:";
+        fileName = raw_input();
+        filePath = folderPath + fileName;
+        
+    return {'filePath':filePath, 'resetModeName':resetModeName};
