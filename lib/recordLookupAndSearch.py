@@ -58,9 +58,12 @@ def cleanRecord(fileHandler):
     contentArray = [temp.lower() for temp in contentArray];
     contentArray2 = [];
     contentArray2.append(contentArray.pop(0));
+    count = 0;
     for file in contentArray:
+        count+=1;
         # add into contentArray2 if not already in contentArray2
         # print contentArray;
         if (not ArraySearch(contentArray2, file)):
             contentArray2.append(file);
     PrintToFile("records2.txt", contentArray2);
+    print "Total: " + str(count);
